@@ -41,8 +41,13 @@ jobs:
       run: |
         python preprocessing/automate_Rindumas.py
 
-    - name: Commit preprocessing result
-      uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: "Auto-update preprocessing dataset"
-        file_pattern: "preprocessing/onlinepaymentfraud_preprocessing.csv"
+    - name: Verify preprocessing result
+      run: |
+        echo "Checking preprocessing output..."
+        ls -lh preprocessing/
+        python - <<EOF
+        import pandas as pd
+        df = pd.read_csv("preprocessing/onlinepaymentfraud_preprocessing.csv")
+        print("Shape:", df.shape)
+        print(df.head())
+        EOF
